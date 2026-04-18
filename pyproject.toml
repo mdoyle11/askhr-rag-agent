@@ -10,6 +10,7 @@ dependencies = [
     "langchain-google-genai>=4.2.2",
     "langchain-text-splitters>=1.1.2",
     "langgraph>=1.1.6",
+    "pinecone>=8.1.2",
     "pydantic-settings>=2.13.1",
     "pymupdf4llm>=1.27.2.2",
     "uvicorn[standard]>=0.44.0",

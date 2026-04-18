@@ -2,14 +2,13 @@ from askhr.ingestion.loader import load_handbook
 from askhr.ingestion.chunking import chunk_text
 import asyncio
 
-pdf_path = "docs/handbook/BPA 25-26 School Year Handbook.pdf"
-
 async def pipeline(doc: str) -> list[dict]:
     text = await load_handbook(doc)
     chunks = chunk_text(text, doc)
     return chunks
 
 if __name__ == "__main__":
+    pdf_path = "docs/handbook/BPA 25-26 School Year Handbook.pdf"
     chunks = asyncio.run(pipeline(pdf_path))
     print(f'{len(chunks)} ingested')
     print(f'Average chunk size: {sum(len(chunk['content']) for chunk in chunks) / len(chunks)}')
