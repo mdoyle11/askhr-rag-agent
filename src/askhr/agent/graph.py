@@ -1,24 +1,18 @@
 from askhr.agent.state import AgentState
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.graph import StateGraph, START, END
-from askhr.config import get_settings
-
-settings = get_settings()
-llm = ChatGoogleGenerativeAI(
-    model="gemini-2.5-flash",
-    api_key=settings.google_api_key.get_secret_value()
-    )
-
-async def respond(state: AgentState) -> dict:
-    response = await llm.ainvoke(state['message'])
-    return {'answer': response.content}
+from askhr.agent.nodes import retrieve, grade, generate, fallback
 
 def build_graph():
     graph = StateGraph(AgentState)
 
-    graph.add_node("response", respond)
+    graph.add_node('retriever', retrieve)
+    graph.add_node('grader', grade)
+    graph.add_node('generator', generate)
+    graph.add_node('fallback', fallback)
 
-    graph.add_edge(START, "response")
-    graph.add_edge("response", END)
+    graph.add_edge(START, "retriever")
+    graph.add_edge("retriever", "grader")
+    graph.add_edge('generator', END)
+    graph.add_edge('fallback', END)
 
     return graph.compile()
