@@ -7,12 +7,13 @@ from askhr.config import get_settings
 from typing import Literal
 
 settings = get_settings()
+RETRY_KWARGS = {'stop_after_attempt': 3, 'wait_exponential_jitter': True}
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
     api_key=settings.google_api_key.get_secret_value()
     )
-
-grader_llm = llm.with_structured_output(RetrievalGrade)
+grader_llm = llm.with_structured_output(RetrievalGrade).with_retry(**RETRY_KWARGS)
+generater_llm = llm.with_retry(**RETRY_KWARGS)
 
 GRADER_PROMPT = """You are a grader evaluating whether retrieved documents are relevant to a user question.
 

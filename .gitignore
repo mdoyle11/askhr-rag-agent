@@ -17,6 +17,8 @@ env/
 !.env.example
 
 # Testing & coverage
+src/askhr/sandbox/
+src/askhr/sandbox_mount.py
 .pytest_cache/
 .coverage
 .coverage.*
