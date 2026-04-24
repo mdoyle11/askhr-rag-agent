@@ -3,7 +3,7 @@ from operator import add
 
 class AgentState(TypedDict, total=False):
     message: str
-    retrieved_docs: Annotated[list[dict], add]
+    query_variants: list[str]
+    retrieved_docs: list[dict]
     retrieval_grade: str
     answer: str
-

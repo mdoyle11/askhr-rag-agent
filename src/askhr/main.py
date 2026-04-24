@@ -7,8 +7,15 @@ from pydantic import BaseModel
 app = FastAPI()
 graph = build_graph()
 
+STAGE_LABELS = {
+    "rewriter": "Analyzing user request...",
+    "retriever": "Searching Documentation...",
+    "reranker": "Analyzing Results...",
+}
+
 try:
-    from askhr.sandbox_mount import mount as _mount_sandbox(app)
+    from askhr.sandbox_mount import mount as _mount_sandbox
+    _mount_sandbox(app)
 except ImportError:
     pass
 
@@ -40,6 +47,10 @@ async def send_response(request: ChatRequest) -> StreamingResponse:
                     docs = output.get('retrieved_docs', [])
                     sections = [section.get('section') for section in docs]
                     payload = json.dumps({'type': 'sources', 'content': sections})
+                    yield f'data: {payload}\n\n'
+                elif event['event'] == 'on_chain_start' and event['name'] in STAGE_LABELS:
+                    node = event['name']
+                    payload = json.dumps({'type': 'status', 'stage': STAGE_LABELS[node]})
                     yield f'data: {payload}\n\n'
                     
             yield f"data: {json.dumps({'type': 'done'})}\n\n"

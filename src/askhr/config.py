@@ -11,6 +11,7 @@ class Settings(BaseSettings):
    pinecone_cloud: str = "aws"
    pinecone_region: str = "us-east-1"
    embedding_dimension: int = 768
+   rewrite_method: str = "multi-query"
 
 def get_settings(): 
    return Settings()

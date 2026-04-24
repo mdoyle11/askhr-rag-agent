@@ -9,3 +9,11 @@ class RetrievalGrade(BaseModel):
             "Return 'irrelevant' if none of the documents contain useful information."
             )
         )
+
+class QueryVariants(BaseModel):
+    variants: list[str] = Field(
+        description='Alternative phrasing of the user question.'
+    )
+
+class ReRanker(BaseModel):
+    scores: list[int] = Field(description='Relevance score 0-10 for each document, in the same order as the input.')
